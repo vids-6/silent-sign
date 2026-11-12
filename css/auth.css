@@ -1,0 +1,114 @@
+/* Silent Sign - login / sign-up page. Builds on the tokens in style.css. */
+
+.auth-body { display: flex; min-height: 100vh; }
+
+.auth {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 440px);
+  gap: clamp(28px, 6vw, 88px);
+  align-items: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(24px, 6vh, 72px) var(--gap);
+}
+
+/* ---------------------------------------------------------------- intro */
+.auth-intro .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; }
+.auth-intro .brand img { border-radius: 12px; display: block; }
+.brand-name { font-size: 1.35rem; font-weight: 700; }
+
+.auth-intro h1 {
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  max-width: 20ch;
+}
+
+.caption-demo {
+  margin: 28px 0 32px;
+  padding: 14px 22px;
+  display: inline-flex; align-items: center;
+  background: #070916;
+  border: 2px solid var(--amber);
+  border-radius: var(--radius-md);
+  font-size: clamp(2rem, 4.6vw, 3rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+  line-height: 1.1;
+}
+.demo-letter { opacity: 0; animation: letter-in 0.35s ease-out forwards; }
+.demo-letter:nth-child(1) { animation-delay: 0.3s; }
+.demo-letter:nth-child(2) { animation-delay: 1.0s; }
+.demo-letter:nth-child(3) { animation-delay: 1.7s; }
+.demo-letter:nth-child(4) { animation-delay: 2.4s; }
+.demo-letter:nth-child(5) { animation-delay: 3.1s; }
+@keyframes letter-in { from { opacity: 0; color: #fff; text-shadow: 0 0 16px var(--amber); } to { opacity: 1; } }
+
+.intro-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; max-width: 52ch; }
+.intro-points li { color: var(--muted); padding-left: 18px; position: relative; }
+.intro-points li::before {
+  content: ""; position: absolute; left: 0; top: 0.62em;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--mint);
+}
+.intro-points strong { color: var(--text); }
+
+/* ---------------------------------------------------------------- card */
+.auth-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 8px 28px 28px;
+}
+
+.tabs { display: flex; border-bottom: 1px solid var(--line); margin: 0 -28px 24px; padding: 0 20px; }
+.tabs [role="tab"] {
+  font: inherit; font-weight: 700; color: var(--muted);
+  background: none; border: 0; cursor: pointer;
+  padding: 16px 8px 14px; margin-right: 18px;
+  border-bottom: 3px solid transparent; margin-bottom: -1px;
+}
+.tabs [role="tab"][aria-selected="true"] { color: var(--text); border-bottom-color: var(--mint); }
+.tabs [role="tab"]:hover { color: var(--text); }
+
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 76px; }
+.reveal {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  font: inherit; font-size: 0.9rem; font-weight: 700;
+  min-height: 36px; padding: 4px 12px;
+  color: var(--text); background: var(--raised);
+  border: 1px solid var(--line); border-radius: var(--radius-sm); cursor: pointer;
+}
+
+.form-error {
+  margin-bottom: 18px; padding: 10px 14px;
+  border: 1px solid var(--coral); border-radius: var(--radius-md);
+  background: rgba(255, 122, 107, 0.12);
+}
+.form-error[hidden] { display: none; }
+
+.auth-card .check { margin: 4px 0 22px; }
+.auth-card .check[hidden] { display: none; }
+.btn-block { width: 100%; min-height: 50px; font-size: 1.02rem; }
+
+.switch-hint { margin-top: 18px; text-align: center; color: var(--muted); }
+.link {
+  font: inherit; font-weight: 700; color: var(--mint);
+  background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .auth { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .auth-intro .brand { margin-bottom: 20px; }
+  .caption-demo { margin: 18px 0 20px; }
+  .intro-points { display: none; }
+  .auth-card { padding: 8px 20px 22px; }
+  .tabs { margin: 0 -20px 20px; padding: 0 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-letter { opacity: 1; animation: none; }
+}

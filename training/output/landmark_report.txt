@@ -1,0 +1,47 @@
+Silent Sign landmark model - held-out test report
+Trained: 2026-09-29 06:32:09
+
+{
+  "images_read": 702,
+  "excluded_conflicting_labels": 16,
+  "no_hand_detected": 168,
+  "usable": 518,
+  "near_duplicate_groups": 378,
+  "train": 404,
+  "test": 114
+}
+
+Grouped CV accuracy on train: 0.7871
+Test accuracy (all predictions): 0.7193
+Threshold 0.50: coverage 0.7018, accepted accuracy 0.8500
+
+              precision    recall  f1-score   support
+
+           A       1.00      0.67      0.80         6
+           B       0.00      0.00      0.00         2
+           C       1.00      1.00      1.00         1
+           D       0.86      1.00      0.92         6
+           E       0.60      0.50      0.55         6
+           F       0.75      0.43      0.55         7
+           G       0.83      1.00      0.91         5
+           I       1.00      1.00      1.00         4
+           K       0.50      0.50      0.50         4
+           L       1.00      1.00      1.00         4
+           M       0.67      0.50      0.57         4
+           N       0.22      1.00      0.36         2
+           O       0.00      0.00      0.00         9
+           P       0.75      1.00      0.86         3
+           Q       0.00      0.00      0.00         3
+           R       1.00      0.89      0.94         9
+           S       0.83      1.00      0.91         5
+           T       0.75      0.75      0.75         4
+           U       1.00      1.00      1.00         2
+           V       0.93      1.00      0.97        14
+           W       0.67      0.80      0.73         5
+           X       1.00      0.33      0.50         3
+           Z       0.86      1.00      0.92         6
+
+    accuracy                           0.72       114
+   macro avg       0.71      0.71      0.68       114
+weighted avg       0.73      0.72      0.71       114
+

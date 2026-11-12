@@ -1,0 +1,348 @@
+{
+  "model_file": "isl_landmark_model.joblib",
+  "model_type": "ExtraTreesClassifier on MediaPipe hand-landmark features",
+  "task": "static ISL alphabet (single-frame handshape) classification",
+  "classes": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "I",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Z"
+  ],
+  "missing_letters": [
+    "H",
+    "J",
+    "Y"
+  ],
+  "feature_version": 1,
+  "feature_dim": 213,
+  "confidence_threshold": 0.5,
+  "sklearn_version": "1.5.2",
+  "mediapipe_version": "0.10.21",
+  "trained_at": "2026-09-29 06:32:09",
+  "data": {
+    "images_read": 702,
+    "excluded_conflicting_labels": 16,
+    "no_hand_detected": 168,
+    "usable": 518,
+    "near_duplicate_groups": 378,
+    "train": 404,
+    "test": 114
+  },
+  "metrics": {
+    "cv_accuracy_train": 0.7871,
+    "test_accuracy": 0.7193,
+    "test_coverage_at_threshold": 0.7018,
+    "test_accuracy_at_threshold": 0.85,
+    "note": "Measured on dataset images where MediaPipe found a hand. Grouped split: near-duplicate composites never cross train/test. Real webcam accuracy depends on signer, lighting and framing and must be verified live."
+  },
+  "per_class_test": {
+    "A": {
+      "precision": 1.0,
+      "recall": 0.667,
+      "support": 6
+    },
+    "B": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 2
+    },
+    "C": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 1
+    },
+    "D": {
+      "precision": 0.857,
+      "recall": 1.0,
+      "support": 6
+    },
+    "E": {
+      "precision": 0.6,
+      "recall": 0.5,
+      "support": 6
+    },
+    "F": {
+      "precision": 0.75,
+      "recall": 0.429,
+      "support": 7
+    },
+    "G": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "support": 5
+    },
+    "I": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 4
+    },
+    "K": {
+      "precision": 0.5,
+      "recall": 0.5,
+      "support": 4
+    },
+    "L": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 4
+    },
+    "M": {
+      "precision": 0.667,
+      "recall": 0.5,
+      "support": 4
+    },
+    "N": {
+      "precision": 0.222,
+      "recall": 1.0,
+      "support": 2
+    },
+    "O": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 9
+    },
+    "P": {
+      "precision": 0.75,
+      "recall": 1.0,
+      "support": 3
+    },
+    "Q": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 3
+    },
+    "R": {
+      "precision": 1.0,
+      "recall": 0.889,
+      "support": 9
+    },
+    "S": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "support": 5
+    },
+    "T": {
+      "precision": 0.75,
+      "recall": 0.75,
+      "support": 4
+    },
+    "U": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 2
+    },
+    "V": {
+      "precision": 0.933,
+      "recall": 1.0,
+      "support": 14
+    },
+    "W": {
+      "precision": 0.667,
+      "recall": 0.8,
+      "support": 5
+    },
+    "X": {
+      "precision": 1.0,
+      "recall": 0.333,
+      "support": 3
+    },
+    "Z": {
+      "precision": 0.857,
+      "recall": 1.0,
+      "support": 6
+    }
+  },
+  "cv_threshold_table": [
+    {
+      "threshold": 0.1,
+      "coverage": 1.0,
+      "accepted_accuracy": 0.7871287128712872
+    },
+    {
+      "threshold": 0.15,
+      "coverage": 0.9925742574257426,
+      "accepted_accuracy": 0.7930174563591023
+    },
+    {
+      "threshold": 0.2,
+      "coverage": 0.9702970297029703,
+      "accepted_accuracy": 0.8086734693877551
+    },
+    {
+      "threshold": 0.25,
+      "coverage": 0.9183168316831684,
+      "accepted_accuracy": 0.8355795148247979
+    },
+    {
+      "threshold": 0.3,
+      "coverage": 0.8960396039603961,
+      "accepted_accuracy": 0.8535911602209945
+    },
+    {
+      "threshold": 0.35,
+      "coverage": 0.849009900990099,
+      "accepted_accuracy": 0.8717201166180758
+    },
+    {
+      "threshold": 0.4,
+      "coverage": 0.8168316831683168,
+      "accepted_accuracy": 0.8909090909090909
+    },
+    {
+      "threshold": 0.45,
+      "coverage": 0.7623762376237624,
+      "accepted_accuracy": 0.8961038961038961
+    },
+    {
+      "threshold": 0.5,
+      "coverage": 0.6905940594059405,
+      "accepted_accuracy": 0.9068100358422939
+    },
+    {
+      "threshold": 0.55,
+      "coverage": 0.6237623762376238,
+      "accepted_accuracy": 0.9325396825396826
+    },
+    {
+      "threshold": 0.6,
+      "coverage": 0.5693069306930693,
+      "accepted_accuracy": 0.9608695652173913
+    },
+    {
+      "threshold": 0.65,
+      "coverage": 0.5247524752475248,
+      "accepted_accuracy": 0.9575471698113207
+    },
+    {
+      "threshold": 0.7,
+      "coverage": 0.43564356435643564,
+      "accepted_accuracy": 0.9772727272727273
+    },
+    {
+      "threshold": 0.75,
+      "coverage": 0.37623762376237624,
+      "accepted_accuracy": 0.993421052631579
+    },
+    {
+      "threshold": 0.8,
+      "coverage": 0.3465346534653465,
+      "accepted_accuracy": 0.9928571428571429
+    },
+    {
+      "threshold": 0.85,
+      "coverage": 0.2722772277227723,
+      "accepted_accuracy": 1.0
+    },
+    {
+      "threshold": 0.9,
+      "coverage": 0.18811881188118812,
+      "accepted_accuracy": 1.0
+    }
+  ],
+  "test_threshold_table": [
+    {
+      "threshold": 0.1,
+      "coverage": 1.0,
+      "accepted_accuracy": 0.7192982456140351
+    },
+    {
+      "threshold": 0.15,
+      "coverage": 0.9912280701754386,
+      "accepted_accuracy": 0.7256637168141593
+    },
+    {
+      "threshold": 0.2,
+      "coverage": 0.9649122807017544,
+      "accepted_accuracy": 0.7454545454545455
+    },
+    {
+      "threshold": 0.25,
+      "coverage": 0.9385964912280702,
+      "accepted_accuracy": 0.7570093457943925
+    },
+    {
+      "threshold": 0.3,
+      "coverage": 0.8859649122807017,
+      "accepted_accuracy": 0.7722772277227723
+    },
+    {
+      "threshold": 0.35,
+      "coverage": 0.8421052631578947,
+      "accepted_accuracy": 0.7916666666666666
+    },
+    {
+      "threshold": 0.4,
+      "coverage": 0.8070175438596491,
+      "accepted_accuracy": 0.8043478260869565
+    },
+    {
+      "threshold": 0.45,
+      "coverage": 0.7456140350877193,
+      "accepted_accuracy": 0.8235294117647058
+    },
+    {
+      "threshold": 0.5,
+      "coverage": 0.7017543859649122,
+      "accepted_accuracy": 0.85
+    },
+    {
+      "threshold": 0.55,
+      "coverage": 0.6842105263157895,
+      "accepted_accuracy": 0.8589743589743589
+    },
+    {
+      "threshold": 0.6,
+      "coverage": 0.6666666666666666,
+      "accepted_accuracy": 0.868421052631579
+    },
+    {
+      "threshold": 0.65,
+      "coverage": 0.5877192982456141,
+      "accepted_accuracy": 0.8805970149253731
+    },
+    {
+      "threshold": 0.7,
+      "coverage": 0.5350877192982456,
+      "accepted_accuracy": 0.9180327868852459
+    },
+    {
+      "threshold": 0.75,
+      "coverage": 0.45614035087719296,
+      "accepted_accuracy": 0.9230769230769231
+    },
+    {
+      "threshold": 0.8,
+      "coverage": 0.40350877192982454,
+      "accepted_accuracy": 0.9130434782608695
+    },
+    {
+      "threshold": 0.85,
+      "coverage": 0.2719298245614035,
+      "accepted_accuracy": 0.9032258064516129
+    },
+    {
+      "threshold": 0.9,
+      "coverage": 0.24561403508771928,
+      "accepted_accuracy": 0.8928571428571429
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Silent Sign · ISL fingerspelling to live captions</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#caption-text">Skip to caption</a>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="assets/logo.svg" alt="" width="40" height="40">
+    <div>
+      <h1>Silent Sign</h1>
+      <p class="brand-sub">Indian Sign Language fingerspelling, captioned live</p>
+    </div>
+  </div>
+  <nav class="app-nav" aria-label="Main">
+    <a href="/" aria-current="page">Recognizer</a>
+    <a href="/dashboard">Dashboard</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="user-name">…</span>
+    <button type="button" class="btn btn-small" id="btn-logout">Log out</button>
+  </div>
+  <div class="status-row" role="group" aria-label="System status">
+    <span class="status-pill" id="server-pill" data-state="checking">
+      <span class="dot" aria-hidden="true"></span><span class="status-text">Connecting to server…</span>
+    </span>
+    <span class="status-pill" id="camera-pill" data-state="off">
+      <span class="dot" aria-hidden="true"></span><span class="status-text">Camera off</span>
+    </span>
+    <span class="status-pill" id="recog-pill" data-state="idle">
+      <span class="dot" aria-hidden="true"></span><span class="status-text">Recognition idle</span>
+    </span>
+  </div>
+</header>
+
+<div class="banner" id="banner" role="alert" hidden>
+  <p id="banner-text"></p>
+  <button type="button" class="btn btn-small" id="banner-action" hidden></button>
+</div>
+
+<main class="layout">
+  <!-- CAMERA -->
+  <section class="stage" aria-label="Camera">
+    <div class="video-frame" id="video-frame" data-state="off">
+      <video id="video" playsinline muted aria-label="Your camera feed, shown mirrored"></video>
+      <canvas id="overlay" aria-hidden="true"></canvas>
+
+      <div class="video-empty" id="video-empty">
+        <h2>Sign letters. Read them as text.</h2>
+        <ol class="steps">
+          <li><strong>Start the camera</strong> and allow access when your browser asks.</li>
+          <li><strong>Hold one letter steady</strong> until the progress ring fills.</li>
+          <li><strong>Lower your hands briefly</strong> before the next letter, or to repeat the same letter.</li>
+        </ol>
+        <p class="hint">Plain background, good light on your hands, both hands inside the frame.</p>
+      </div>
+
+      <div class="video-message" id="video-message" hidden>
+        <h2 id="video-message-title"></h2>
+        <p id="video-message-body"></p>
+        <button type="button" class="btn btn-primary" id="video-message-action">Try again</button>
+      </div>
+
+      <div class="hand-chip" id="hand-chip" hidden>No hands in view</div>
+    </div>
+
+    <div class="controls" role="toolbar" aria-label="Camera and recognition controls">
+      <button type="button" class="btn btn-primary" id="btn-camera">Start camera</button>
+      <button type="button" class="btn" id="btn-pause" disabled aria-keyshortcuts="P">Pause recognition</button>
+      <label class="select-wrap" id="camera-select-wrap" hidden>
+        <span class="sr-only">Camera</span>
+        <select id="camera-select"></select>
+      </label>
+    </div>
+
+    <details class="settings">
+      <summary>Recognition settings <span class="settings-saved" id="settings-saved">saved to your account</span></summary>
+      <div class="settings-body">
+        <label class="check">
+          <input type="checkbox" id="opt-lefthand">
+          <span><strong>I sign with my left hand as dominant.</strong>
+          The training images use right-hand-dominant signers, so this mirrors frames before recognition.</span>
+        </label>
+        <label class="range">
+          <span>Hold time before a letter is added: <output id="hold-out">0.8 s</output></span>
+          <input type="range" id="opt-hold" min="0.4" max="2" step="0.1" value="0.8">
+        </label>
+        <label class="check">
+          <input type="checkbox" id="opt-suggestions" checked>
+          <span>Suggest words while I spell</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="opt-landmarks" checked>
+          <span>Show hand tracking lines on the video</span>
+        </label>
+      </div>
+    </details>
+  </section>
+
+  <!-- NOW SEEING -->
+  <aside class="reading" aria-label="Current recognition">
+    <h2 class="panel-title">Now seeing</h2>
+    <div class="now">
+      <div class="ring" id="ring" style="--p:0">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="ring-track" cx="60" cy="60" r="52"/>
+          <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="52"/>
+        </svg>
+        <span class="now-letter" id="now-letter" data-kind="none">–</span>
+      </div>
+      <div class="now-detail">
+        <p class="now-state" id="now-state">Start the camera to begin.</p>
+        <div class="meter" aria-hidden="true">
+          <div class="meter-fill" id="meter-fill"></div>
+          <div class="meter-mark" id="meter-mark" title="Minimum confidence"></div>
+        </div>
+        <p class="meter-label"><span id="conf-text">Confidence –</span>
+          <span class="muted">· needs <span id="thr-text">50</span>%</span></p>
+      </div>
+    </div>
+    <p class="alts" id="alts" aria-label="Other possibilities"></p>
+
+    <h3 class="panel-subtitle">Recently added</h3>
+    <ol class="history" id="history" aria-label="Recently added letters"></ol>
+    <p class="history-empty" id="history-empty">Letters you add appear here with their confidence.</p>
+  </aside>
+
+  <!-- CAPTION -->
+  <section class="caption-strip" aria-labelledby="caption-heading">
+    <div class="caption-head">
+      <h2 id="caption-heading">Caption</h2>
+      <span class="caption-meta"><span class="caption-count" id="caption-count">0 characters</span>
+        <span class="save-state" id="save-state" role="status" data-state="idle"></span></span>
+    </div>
+    <p class="caption-text" id="caption-text" tabindex="-1" aria-live="polite" aria-atomic="false"><span id="caption-content" class="caption-content"></span><span class="caret" aria-hidden="true"></span><span class="caption-placeholder" id="caption-placeholder">Recognized letters will appear here.</span></p>
+    <div class="suggestions" id="suggestions" role="group" aria-label="Word suggestions" hidden>
+      <span class="suggestions-label">Finish the word:</span>
+      <span id="suggestion-buttons"></span>
+    </div>
+    <div class="caption-actions" role="toolbar" aria-label="Caption editing">
+      <button type="button" class="btn" id="btn-space" aria-keyshortcuts="S">Add space</button>
+      <button type="button" class="btn" id="btn-back" aria-keyshortcuts="Backspace">Delete last</button>
+      <button type="button" class="btn" id="btn-clear">Clear caption</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="btn-speak">Read aloud</button>
+      <button type="button" class="btn" id="btn-download">Download .txt</button>
+      <button type="button" class="btn btn-accent" id="btn-copy" aria-keyshortcuts="C">Copy text</button>
+    </div>
+    <p class="shortcuts">Keyboard: <kbd>P</kbd> pause or resume, <kbd>S</kbd> space, <kbd>Backspace</kbd> delete last, <kbd>C</kbd> copy, <kbd>1</kbd>–<kbd>3</kbd> pick a suggested word.</p>
+  </section>
+
+  <!-- REPLY: letter reference for the hearing participant -->
+  <section class="reply" aria-labelledby="reply-heading">
+    <div class="reply-head">
+      <div>
+        <h2 id="reply-heading" class="panel-title">Show letters to the signer</h2>
+        <p class="muted">For the hearing participant: type a reply and it appears as ISL alphabet photos from the dataset.</p>
+      </div>
+    </div>
+    <form class="reply-form" id="ref-form" autocomplete="off">
+      <label class="sr-only" for="ref-input">Text to show as letter signs</label>
+      <input id="ref-input" type="text" maxlength="60" placeholder="Type a short reply, e.g. GOOD TO SEE YOU" spellcheck="false">
+      <button type="submit" class="btn btn-accent">Show signs</button>
+      <button type="button" class="btn" id="ref-play" aria-pressed="false" disabled>Play one at a time</button>
+    </form>
+    <div class="ref-viewer" id="ref-viewer" hidden aria-live="polite">
+      <img id="ref-viewer-img" alt="" width="220" height="220">
+      <div><b id="ref-viewer-letter"></b><span id="ref-viewer-pos"></span><span class="hint">Press Esc or Stop to close.</span></div>
+    </div>
+    <ol class="ref-output" id="ref-output" hidden aria-label="Letter signs"></ol>
+    <p class="ref-note" id="ref-note"></p>
+  </section>
+
+  <!-- LETTERS -->
+  <section class="letters" aria-labelledby="letters-heading">
+    <h2 id="letters-heading" class="panel-title">Letters this model knows</h2>
+    <ul class="letter-grid" id="letter-grid" aria-describedby="letters-legend"></ul>
+    <p class="legend" id="letters-legend">
+      <span class="legend-item"><span class="key key-ok"></span>recognized</span>
+      <span class="legend-item"><span class="key key-weak"></span>often confused in testing</span>
+      <span class="legend-item"><span class="key key-missing"></span>not in the training data</span>
+      <span class="legend-item">Select a letter to see its sign.</span>
+    </p>
+  </section>
+
+  <!-- MODEL CARD -->
+  <section class="about" aria-labelledby="about-heading">
+    <h2 id="about-heading" class="panel-title">What this can and cannot do</h2>
+    <p>Silent Sign reads <strong>static ISL alphabet handshapes</strong>, one letter at a time, from single camera frames. It spells words letter by letter. It does not understand word signs, signs that involve movement, or sentence grammar.</p>
+    <dl class="stats" id="stats">
+      <div><dt>Held-out test accuracy</dt><dd id="stat-acc">–</dd></div>
+      <div><dt>Correct when it commits to an answer</dt><dd id="stat-acc-thr">–</dd></div>
+      <div><dt>Test images it answered</dt><dd id="stat-cov">–</dd></div>
+    </dl>
+    <p class="fine" id="about-fine">Measured on dataset images only. Accuracy on your camera depends on lighting, framing and signing style.</p>
+  </section>
+</main>
+
+<div class="sr-only" aria-live="assertive" id="announcer"></div>
+<div class="toast" id="toast" role="status" hidden>
+  <span id="toast-text"></span>
+  <button type="button" class="btn btn-small" id="toast-action" hidden></button>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/words.js"></script>
+<script src="js/suggest.js"></script>
+<script src="js/stabilizer.js"></script>
+<script src="js/history-log.js"></script>
+<script src="js/reference.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

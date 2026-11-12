@@ -1,0 +1,28 @@
+{
+  "note": "Reference photos copied from ISL_Dataset for the 'Show letters to the signer' panel. Chosen as clear real photos that the model recognises confidently.",
+  "sources": {
+    "A": "ISL_Dataset/A/A (20).jpg",
+    "B": "ISL_Dataset/B/B (33).jpg",
+    "C": "ISL_Dataset/C/C (34).jpg",
+    "D": "ISL_Dataset/D/D (30).jpg",
+    "E": "ISL_Dataset/E/E (43).jpg",
+    "F": "ISL_Dataset/F/F (19).jpg",
+    "G": "ISL_Dataset/G/G (25).jpg",
+    "I": "ISL_Dataset/I/I (27).jpg",
+    "K": "ISL_Dataset/K/K (32).jpg",
+    "L": "ISL_Dataset/L/L (32).jpg",
+    "M": "ISL_Dataset/M/M (24).jpg",
+    "N": "ISL_Dataset/N/N (22).jpg",
+    "O": "ISL_Dataset/O/O (4).jpg",
+    "P": "ISL_Dataset/P/P (28).jpg",
+    "Q": "ISL_Dataset/Q/Q (30).jpg",
+    "R": "ISL_Dataset/R/R (25).jpg",
+    "S": "ISL_Dataset/S/S (29).jpg",
+    "T": "ISL_Dataset/T/T (31).jpg",
+    "U": "ISL_Dataset/U/U (23).jpg",
+    "V": "ISL_Dataset/V/V (24).jpg",
+    "W": "ISL_Dataset/W/W (24).jpg",
+    "X": "ISL_Dataset/X/X (20).jpg",
+    "Z": "ISL_Dataset/Z/Z (23).jpg"
+  }
+}

@@ -1,0 +1,37 @@
+{
+    "classes": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "I",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Z"
+    ],
+    "num_classes": 23,
+    "image_size": [
+        224,
+        224
+    ],
+    "confidence_threshold": 0.8,
+    "validation_accuracy": 0.42553192377090454,
+    "dataset_images": 702,
+    "training_images": 561,
+    "validation_images": 141
+}

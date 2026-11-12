@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silent Sign — Live Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="off">
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="mark">SS</div>
+      <div>
+        <h1>Silent Sign</h1>
+        <p>real-time bi-directional sign-language translation — live demo</p>
+      </div>
+    </div>
+    <div class="host-control">
+      <span class="label">HOST&nbsp;·&nbsp;ACCESSIBILITY MODE</span>
+      <label class="switch">
+        <input type="checkbox" id="accessToggle">
+        <span class="slider"></span>
+      </label>
+      <span class="onair" id="onairBadge">OFF AIR</span>
+    </div>
+  </header>
+
+  <div class="gate-note">
+    ⚠ Silent Sign Accessibility Mode is off. Toggle it on above to activate translation for every participant.
+  </div>
+
+  <div class="grid">
+    <!-- SIGNER PANEL -->
+    <section class="panel" id="signerPanel">
+      <div class="panel-head">
+        <h2>🖐 Deaf / Mute Participant — Signer</h2>
+        <span class="tag" id="signerModelTag">model: loading…</span>
+      </div>
+      <div class="signer-row">
+        <div class="video-box" id="videoBox">
+          <video id="webcam" autoplay playsinline muted></video>
+          <canvas id="overlay"></canvas>
+          <div class="video-placeholder" id="videoPlaceholder">
+            Requesting camera access…<br>
+            If access is blocked, use <b>Simulate</b> below.
+          </div>
+        </div>
+        <div class="signer-side">
+          <div class="result-card">
+            <div class="rec" id="signerRec">— awaiting gesture —</div>
+            <div class="sub" id="signerSub">Perform a sign clearly in frame (or tap a vocabulary card)</div>
+            <button class="flag-btn" id="flagBtn" style="display:none;">⚑ Flag as incorrect → send to reviewer</button>
+          </div>
+          <div class="confidence-row">
+            <span>CONF</span>
+            <div class="meter"><i id="confMeter"></i></div>
+            <span id="confVal">0%</span>
+          </div>
+
+          <!-- ISL LETTER RECOGNITION — live, updates continuously, sits
+               right next to the video (not in a section below it) -->
+          <div class="letter-live-card">
+            <div class="letter-live-head">
+              <span>ISL LETTER</span>
+              <span class="tag" id="islModelTag">model: not trained yet</span>
+            </div>
+            <div class="letter-live-display">
+              <span class="letter-live-big" id="islLetterBig">—</span>
+              <span class="letter-live-conf" id="islLetterConf"></span>
+            </div>
+            <div class="letter-live-buffer" id="islBuffer"><span id="islBufferText">&nbsp;</span></div>
+            <div class="letter-live-controls">
+              <button id="islBackspace">⌫</button>
+              <button id="islClear">Clear</button>
+              <button id="islSend" class="primary">Send as caption</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HEARING PANEL -->
+    <section class="panel" id="hearingPanel">
+      <div class="panel-head">
+        <h2>🔊 Hearing Participant</h2>
+        <span class="tag" id="asrTag">ASR: idle</span>
+      </div>
+
+      <div class="listener-mode-row">
+        <label for="listenerModeSelect" class="listener-mode-label">Listener Mode</label>
+        <div class="select-wrap">
+          <select id="listenerModeSelect">
+            <option value="normal">Normal</option>
+            <option value="deaf">Deaf</option>
+            <option value="mute">Mute</option>
+            <option value="deaf-mute">Deaf + Mute</option>
+          </select>
+        </div>
+        <span class="mode-badge" id="modeBadge">NORMAL</span>
+        <span class="audio-indicator" id="audioIndicator" title="Audio output status">🔊</span>
+      </div>
+
+      <div class="signer-row">
+        <div class="avatar-stage" id="avatarStage"></div>
+        <div class="signer-side">
+          <div class="transcript" id="transcript">Speak, type, or spell below — it becomes a caption + sign avatar for the signer.</div>
+          <div class="mic-row">
+            <button class="mic-btn" id="micBtn"><span class="dot"></span><span id="micLabel">Start speaking</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="live-captions-box">
+        <div class="live-captions-head">
+          <span>LIVE CAPTIONS</span>
+          <span class="live-dot" id="liveDot"></span>
+        </div>
+        <div class="live-captions-body" id="liveCaptionsBody">
+          <div class="live-caption-empty" id="liveCaptionsEmpty">Waiting for the signer to communicate…</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- TEXT & SPELLING INPUT — new: for hearing participants who can't/don't want to speak -->
+  <div class="text-input-section">
+    <h3>Type or spell — sends straight to the signer's captions</h3>
+    <p class="hint">Don't want to talk out loud, or the signer needs it in writing? Use either method below — both work exactly like speaking: they add a caption and speak it aloud for the signer.</p>
+
+    <div class="type-row">
+      <input type="text" id="typeInput" placeholder="Type a full sentence, then press Send or hit Enter…" maxlength="200">
+      <button id="typeSendBtn">Send</button>
+    </div>
+
+    <div class="spell-box">
+      <div class="spell-head">
+        <span class="hint" style="margin:0;">Or spell it out letter by letter (fingerspelling reference on the right):</span>
+      </div>
+      <div class="spell-buffer" id="spellBuffer"><span id="spellBufferText">&nbsp;</span></div>
+      <div class="spell-controls">
+        <button id="spellBackspace">⌫ Backspace</button>
+        <button id="spellClear">Clear</button>
+        <button id="spellSend" class="primary">Send as caption</button>
+      </div>
+      <div class="letter-grid" id="letterGrid"></div>
+    </div>
+  </div>
+
+  <!-- CAPTION TICKER -->
+  <div class="ticker">
+    <div class="ticker-head"><span><span class="cc-badge">CC</span>&nbsp; Session Captions</span><span id="tickerClock">00:00</span></div>
+    <div class="ticker-body" id="tickerBody"></div>
+  </div>
+
+  <!-- VOCABULARY -->
+  <div class="vocab">
+    <h3>Supported vocabulary — tap to simulate</h3>
+    <div class="vocab-grid" id="vocabGrid"></div>
+  </div>
+
+  <!-- INSTRUMENTS -->
+  <div class="instruments">
+    <span class="chip">latency <b id="latVal">—</b></span>
+    <span class="chip">fps <b id="fpsVal">—</b></span>
+    <span class="chip">active session <b id="sessVal">1</b></span>
+    <span class="chip">accuracy (session) <b id="accVal">—</b></span>
+  </div>
+
+  <!-- REVIEWER QUEUE -->
+  <div class="reviewer">
+    <div class="reviewer-head">
+      <h3>Sign Language Reviewer queue</h3>
+      <span class="count" id="reviewCount" style="display:none;">0</span>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+    <div class="empty-note" id="reviewEmpty">No flagged items — corrections raised by participants will appear here for a reviewer to resolve.</div>
+  </div>
+
+  <footer>SILENT SIGN — SOFTWARE ENGINEERING DEMO BUILD · hand tracking runs locally in your browser, no video leaves the device</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/4.10.0/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose@0.1.0/dist/handpose.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

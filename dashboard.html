@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard · Silent Sign</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Silent Sign recognizer">
+    <img src="assets/logo.svg" alt="" width="40" height="40">
+    <div>
+      <span class="brand-title">Silent Sign</span>
+      <p class="brand-sub">Indian Sign Language fingerspelling, captioned live</p>
+    </div>
+  </a>
+  <nav class="app-nav" aria-label="Main">
+    <a href="/">Recognizer</a>
+    <a href="/dashboard" aria-current="page">Dashboard</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="user-name">…</span>
+    <button type="button" class="btn btn-small" id="btn-logout">Log out</button>
+  </div>
+</header>
+
+<main id="main" class="dash" tabindex="-1">
+  <div class="dash-head">
+    <div>
+      <h1 id="greeting">Your signing history</h1>
+      <p class="muted" id="since"></p>
+    </div>
+    <a class="btn btn-primary" href="/">Open recognizer</a>
+  </div>
+
+  <div class="banner" id="load-error" role="alert" hidden></div>
+
+  <!-- empty state -->
+  <section class="empty" id="empty" hidden>
+    <h2>No signing yet</h2>
+    <p>Open the recognizer and sign a few letters. Each session is saved here with what you signed, how confident the model was, and which letters you had to correct.</p>
+    <a class="btn btn-primary" href="/">Start signing</a>
+  </section>
+
+  <div id="content" hidden>
+    <!-- tiles -->
+    <section aria-labelledby="totals-title">
+      <h2 class="sr-only" id="totals-title">Totals</h2>
+      <dl class="tiles">
+        <div class="tile tile-hero"><dt>Letters signed</dt><dd id="t-letters">–</dd></div>
+        <div class="tile"><dt>Sessions</dt><dd id="t-sessions">–</dd></div>
+        <div class="tile"><dt>Kept without correction</dt><dd id="t-kept">–</dd></div>
+        <div class="tile"><dt>Average confidence</dt><dd id="t-conf">–</dd></div>
+        <div class="tile"><dt>Words finished with suggestions</dt><dd id="t-sugg">–</dd></div>
+      </dl>
+    </section>
+
+    <div class="charts">
+      <!-- daily -->
+      <section class="card" aria-labelledby="daily-title">
+        <h2 class="card-title" id="daily-title">Letters signed per day</h2>
+        <p class="card-sub">Last 14 days</p>
+        <div class="chart" id="daily-chart" role="img" aria-labelledby="daily-title daily-summary"></div>
+        <p class="sr-only" id="daily-summary"></p>
+        <details class="data-table">
+          <summary>Show as table</summary>
+          <table id="daily-table"><thead><tr><th scope="col">Day</th><th scope="col">Letters</th></tr></thead><tbody></tbody></table>
+        </details>
+      </section>
+
+      <!-- per letter -->
+      <section class="card" aria-labelledby="letters-title">
+        <h2 class="card-title" id="letters-title">Your letters</h2>
+        <p class="card-sub">How often you signed each letter, and how often you deleted it as wrong</p>
+        <ul class="legend-row" aria-label="Legend">
+          <li><span class="swatch swatch-kept" aria-hidden="true"></span>Kept</li>
+          <li><span class="swatch swatch-corrected" aria-hidden="true"></span>Corrected (deleted as wrong)</li>
+        </ul>
+        <div class="letter-bars" id="letter-chart"></div>
+        <p class="practice" id="practice"></p>
+        <details class="data-table">
+          <summary>Show as table</summary>
+          <table id="letter-table">
+            <thead><tr><th scope="col">Letter</th><th scope="col">Signed</th><th scope="col">Corrected</th><th scope="col">Avg. confidence</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </details>
+      </section>
+    </div>
+
+    <!-- sessions -->
+    <section class="card" aria-labelledby="sessions-title">
+      <div class="card-head">
+        <div>
+          <h2 class="card-title" id="sessions-title">Sessions</h2>
+          <p class="card-sub" id="sessions-sub"></p>
+        </div>
+      </div>
+      <ol class="sessions" id="sessions"></ol>
+      <button type="button" class="btn" id="more" hidden>Show older sessions</button>
+    </section>
+  </div>
+
+  <div class="lower">
+    <!-- settings -->
+    <section class="card" aria-labelledby="settings-title">
+      <h2 class="card-title" id="settings-title">Recognition settings</h2>
+      <p class="card-sub">Saved to your account and used every time you open the recognizer.</p>
+      <form id="settings-form" class="settings-list">
+        <label class="check">
+          <input type="checkbox" name="leftHand">
+          <span><strong>I sign with my left hand as dominant</strong> Mirrors frames before recognition.</span>
+        </label>
+        <label class="range">
+          <span>Hold time before a letter is added: <output id="hold-out">0.8 s</output></span>
+          <input type="range" name="holdSeconds" min="0.4" max="2" step="0.1" value="0.8">
+        </label>
+        <label class="check">
+          <input type="checkbox" name="suggestions">
+          <span><strong>Suggest words while I spell</strong> Shows up to three common words that start with the letters so far.</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="landmarks">
+          <span><strong>Show hand tracking lines on the video</strong></span>
+        </label>
+        <p class="save-state" id="settings-state" role="status"></p>
+      </form>
+    </section>
+
+    <!-- account -->
+    <section class="card" aria-labelledby="account-title">
+      <h2 class="card-title" id="account-title">Account</h2>
+      <p class="card-sub">Your account and history are stored only on this computer.</p>
+
+      <details class="account-block">
+        <summary>Change password</summary>
+        <form id="password-form" novalidate>
+          <div class="field">
+            <label for="pw-current">Current password</label>
+            <input id="pw-current" type="password" autocomplete="current-password" required>
+          </div>
+          <div class="field">
+            <label for="pw-new">New password</label>
+            <input id="pw-new" type="password" autocomplete="new-password" minlength="8" required aria-describedby="pw-new-hint">
+            <p class="field-hint" id="pw-new-hint">At least 8 characters.</p>
+          </div>
+          <p class="form-msg" id="password-msg" role="status"></p>
+          <button type="submit" class="btn">Change password</button>
+        </form>
+      </details>
+
+      <details class="account-block">
+        <summary>Delete history</summary>
+        <p>Removes every saved session and statistic. Your account and settings stay.</p>
+        <p class="form-msg" id="history-msg" role="status"></p>
+        <button type="button" class="btn btn-danger" id="btn-clear-history">Delete all history</button>
+      </details>
+
+      <details class="account-block">
+        <summary>Delete account</summary>
+        <form id="delete-form" novalidate>
+          <p>Deletes your account, settings and all history from this computer. This cannot be undone.</p>
+          <div class="field">
+            <label for="del-password">Enter your password to confirm</label>
+            <input id="del-password" type="password" autocomplete="current-password" required>
+          </div>
+          <p class="form-msg" id="delete-msg" role="status"></p>
+          <button type="submit" class="btn btn-danger">Delete my account</button>
+        </form>
+      </details>
+    </section>
+  </div>
+</main>
+
+<div class="chart-tip" id="tip" role="tooltip" hidden></div>
+<div class="toast" id="toast" role="status" hidden><span id="toast-text"></span></div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

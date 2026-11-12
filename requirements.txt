@@ -1,0 +1,30 @@
+# Silent Sign runtime + training dependencies.
+# Verified to resolve to prebuilt win_amd64 wheels on Python 3.12 (and 3.11).
+# Python 3.13 is NOT supported: mediapipe 0.10.21 has no 3.13 wheels.
+# No TensorFlow / tensorflowjs is needed for the live app.
+flask==3.1.0
+werkzeug==3.1.9
+mediapipe==0.10.21
+numpy==1.26.4
+opencv-contrib-python==4.11.0.86
+scikit-learn==1.5.2
+scipy==1.17.1
+joblib==1.4.2
+threadpoolctl==3.7.0
+matplotlib==3.9.2
+jax==0.7.1
+jaxlib==0.7.1
+ml_dtypes==0.5.4
+protobuf==4.25.9
+absl-py==2.5.0
+attrs==26.1.0
+flatbuffers==25.12.19
+sentencepiece==0.2.2
+sounddevice==0.5.6
+opt_einsum==3.4.0
+click==8.5.0
+colorama==0.4.6
+itsdangerous==2.2.0
+jinja2==3.1.6
+markupsafe==3.0.3
+blinker==1.9.0
